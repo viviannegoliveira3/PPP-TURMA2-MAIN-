@@ -1,3 +1,4 @@
 node_modules/
 out.json
 test/k6/report.html
+test/k6/papaparse.js

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "k6:run": "k6 run test/k6/api-perf-test.js",
+    "k6:run:advanced": "k6 run test/k6/advanced-perf-test.js",
     "k6:run:json": "k6 run --out json=out.json test/k6/api-perf-test.js",
     "k6:report": "node tools/k6-json-to-html.js out.json test/k6/report.html",
     "k6:full": "npm run k6:run:json && npm run k6:report"
