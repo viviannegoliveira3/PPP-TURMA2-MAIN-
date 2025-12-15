@@ -1,0 +1,40 @@
+{
+  "name": "ppp-turma2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "k6:run": "k6 run test/k6/api-perf-test.js",
+    "k6:run:json": "k6 run --out json=out.json test/k6/api-perf-test.js",
+    "k6:report": "node tools/k6-json-to-html.js out.json test/k6/report.html",
+    "k6:full": "npm run k6:run:json && npm run k6:report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliodelimas/ppp-turma2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "overrides": {
+    "raw-body": {
+      "iconv-lite": "^0.7.1"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/juliodelimas/ppp-turma2/issues"
+  },
+  "homepage": "https://github.com/juliodelimas/ppp-turma2#readme",
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "express": "^5.2.1",
+    "iconv-lite": "^0.7.1",
+    "js-yaml": "^4.1.1",
+    "jsonwebtoken": "^9.0.3",
+    "raw-body": "^3.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
