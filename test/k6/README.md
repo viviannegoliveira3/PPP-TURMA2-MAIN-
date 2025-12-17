@@ -180,8 +180,8 @@ node app.js
 
 ```powershell
 
-```k6 run --out json=out.json test/k6/api-perf-test.js --env BASE_URL=http://localhost:3000
-
+```
+k6 run --out json=out.json test/k6/api-perf-test.js --env BASE_URL=http://localhost:3000
 3. Gere o relatório HTML:
 
 ```powershell

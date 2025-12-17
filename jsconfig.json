@@ -8,6 +8,7 @@
   ],
   "exclude": [
     "node_modules",
-    "test/k6"
+    "test/k6",
+    "test/k6/papaparse.js"
   ]
 }

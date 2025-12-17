@@ -3,7 +3,7 @@ import { check, group, sleep } from 'k6';
 import { Trend, Rate, Counter } from 'k6/metrics';
 import { SharedArray } from 'k6/data';
 import { randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
-import papaparse from 'https://jslib.k6.io/papaparse/5.3.2/index.js';
+import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
 
 // --- 1. Options (Stages & Thresholds) ---
 // Simulates a load profile: ramp up to 10 VUs, hold, then ramp down.

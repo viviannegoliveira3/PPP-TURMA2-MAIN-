@@ -1,14 +1,47 @@
-Testes de performance k6 (localizados em `test/k6`)
+# Testes de performance k6
+
+> **Nota:** Para executar os testes e gerar o relatório, o método principal é usar o script `run-k6.ps1`. Veja a seção "Como executar" abaixo para detalhes.
 
 Este README descreve onde no código cada um dos conceitos solicitados está implementado.
 
-Sumário rápido (arquivos relevantes)
+## Sumário rápido (arquivos relevantes)
+- `run-k6.ps1` - **Principal script para execução dos testes.** Automatiza a execução, geração de relatório e visualização.
 - `test/k6/api-perf-test.js` — script k6 principal (options, helpers, trends, groups, CSV, setup).
 - `test/k6/data/students.csv` — dados para data-driven testing.
-- `tools/k6-json-to-html.js` — conversor simples de JSON k6 para HTML (tenta ler o objeto agregado quando presente).
-- `tools/parse-k6-json.js` — utilitário que agrega pontos NDJSON e pode gerar um relatório HTML quando o resumo agregado não está presente.
+- `tools/k6-json-to-html.js` — conversor simples de JSON k6 para HTML.
+- `package.json` — contém os scripts `k6:*` que são orquestrados pelo `run-k6.ps1`.
 
-Detalhamento por conceito (trechos e linhas em `test/k6/api-perf-test.js`)
+## Como executar
+
+O script `run-k6.ps1` automatiza todo o processo de teste e geração de relatório.
+
+1.  **Inicie a API** (se ainda não estiver rodando) em um terminal separado:
+    ```powershell
+    node app.js
+    ```
+
+2.  **Execute o script de teste** em outro terminal PowerShell:
+    ```powershell
+    .\run-k6.ps1
+    ```
+
+Isso irá:
+- Executar os testes de performance k6.
+- Gerar um arquivo de resultados `out.json`.
+- Converter os resultados em um relatório `test/k6/report.html`.
+- Abrir o relatório HTML automaticamente no seu navegador padrão.
+
+Para conveniência, você pode usar o parâmetro `-StartServer` para que o script inicie e pare a API automaticamente:
+
+```powershell
+.\run-k6.ps1 -StartServer
+```
+
+---
+
+## Detalhamento por conceito
+
+A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
 - Thresholds
 
@@ -30,7 +63,6 @@ Detalhamento por conceito (trechos e linhas em `test/k6/api-perf-test.js`)
   Exemplos (linhas 46–51 e 60–63):
 
   ```javascript
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L10-L16
   // linhas 46-51 (registerStudent)
   registerTrend.add(res.timings.duration);
   const ok = check(res, {
@@ -43,7 +75,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   // linhas 60-63 (loginStudent checks)
   const ok = check(res, {
     'student login 200': (r) => r.status === 200,
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L46-L51
     'student login has token': (r) => !!(r.json && r.json().token),
   });
   ```
@@ -51,7 +82,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
 - Helpers
 
   Funções reutilizáveis definidas no topo do script:
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L60-L63
 
   ```javascript
   // linhas 5-9 (randomName)
@@ -69,7 +99,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
 
 - Trends
 
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L5-L9
   Declaração de métricas custom (linhas 19–23):
 
   ```javascript
@@ -81,7 +110,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   ```
 
 - Faker (geração local de dados únicos)
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L19-L23
 
   Para execução local o teste usa um gerador simples (evita dependência de CDN):
 
@@ -90,7 +118,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   function randomName() { /* gera nomes aleatórios para execução local */ }
   ```
 
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L4-L9
 - Variável de Ambiente
 
   O helper `baseUrl()` e o `setup()` usam `__ENV` (linhas 35–38 e 98–100):
@@ -101,13 +128,11 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
     return __ENV.BASE_URL || 'http://localhost:3000';
   }
 
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L35-L38
   // linhas 98-100 (setup usa __ENV para instruidor)
   const instrEmail = __ENV.INSTRUCTOR_EMAIL || `instr+${Math.floor(Math.random() * 10000)}@example.com`;
   const instrPwd = __ENV.INSTRUCTOR_PASSWORD || 'instructorpass';
   ```
 
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L98-L100
 - Stages
 
   O arquivo traz um preset local (`vus`/`duration`) nas linhas 11–13; para execuções reais em CI prefira usar `options.stages` ou passar `ENV_STAGES` via `run-k6.ps1`.
@@ -116,7 +141,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   // linhas 11-13 (preset local)
   export const options = { vus: 2, duration: '15s' };
   ```
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L11-L13
 
 - Reaproveitamento de Resposta
 
@@ -128,7 +152,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   const token = (loginRes && loginRes.json) ? loginRes.json().token : null;
   // ... cria lesson ...
   return { base, instructorToken: token, lessonId };
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L101-L113
   ```
 
 - Uso de Token de Autenticação
@@ -137,12 +160,10 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
 
   ```javascript
   // linha 85 (addProgress headers)
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L85-L85
   const params = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${instructorToken}` } };
 
   // linha 143 (GET /students com Authorization)
   http.get(`${baseUrl()}/students`, { headers: { Authorization: `Bearer ${instructorToken}` } });
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L143-L143
   ```
 
 - Data-Driven Testing
@@ -153,7 +174,6 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
   // linhas 25-33
   const csv = open('./data/students.csv');
   const lines = csv.split('\n').filter(l => l.trim() !== '');
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L25-L33
   function parseRow(i) { const cols = lines[i % lines.length].split(','); return { name: cols[0], email: cols[1], password: cols[2] }; }
   ```
 
@@ -163,34 +183,48 @@ Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-te
 
   ```javascript
   // linhas 119 e 138
-Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L119-L138
   group('student lifecycle', function () { /* ... */ });
   group('instructor actions', function () { /* ... */ });
   ```
 
-Como executar
+---
 
-1. Inicie a API em outra janela:
+## Outras Formas de Execução
+
+Além do script `run-k6.ps1`, os testes podem ser executados diretamente com NPM ou com o comando `k6`.
+
+### Executando via NPM
+
+Os seguintes comandos estão disponíveis no `package.json`:
+
+-   **Execução completa com relatório:**
+    Roda o teste de performance e gera um relatório HTML em `test/k6/report.html`.
+
+    ```bash
+    npm run k6:full
+    ```
+
+-   **Executar apenas o teste básico:**
+    Roda o script `api-perf-test.js` sem gerar o relatório final.
+
+    ```bash
+    npm run k6:run
+    ```
+
+-   **Executar o teste avançado:**
+    Roda o script `advanced-perf-test.js`.
+
+    ```bash
+    npm run k6:run:advanced
+    ```
+
+### Execução Direta com k6
+
+Para cenários mais avançados, como ativar o dashboard web do k6, você pode invocar o `k6` diretamente.
 
 ```powershell
-node app.js
+# Exemplo: rodando o teste com o dashboard web ativado
+$env:K6_WEB_DASHBOARD = "true"
+$env:K6_WEB_DASHBOARD_EXPORT = "dashboard.html"
+k6 run test/k6/api-perf-test.js
 ```
-
-2. Execute o teste k6 (exemplo local):
-
-```powershell
-k6 run --out json=out.json test/k6/api-perf-test.js --env BASE_URL=http://localhost:3000
-```
-
-3. Gere o relatório HTML:
-
-```powershell
-node tools/parse-k6-json.js out.json test/k6/report.html
-# ou (se o k6 já gerou o agregado):
-node tools/k6-json-to-html.js out.json test/k6/report.html
-```
-
-Observações
-
-- O `tools/k6-json-to-html.js` tenta ler o bloco agregado do JSON gerado pelo k6; quando esse bloco não está presente (você apenas tem pontos NDJSON) o `tools/parse-k6-json.js` pode agregar e gerar um HTML simples.
-- Para relatórios mais completos/visuais, recomendo exportar o k6 para Influx/Grafana ou usar um repositório de métricas dedicado.

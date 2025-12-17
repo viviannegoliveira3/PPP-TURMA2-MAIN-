@@ -1,52 +1,4 @@
 param(
-  [string]$BaseUrl = "http://localhost:3000",
-  [switch]$StartServer,
-  [string]$EnvStages = '',
-  [string]$EnvP95Ms = '500',
-  [string]$EnvErrorRate = '0.01'
-)
-
-# Optional: start app server in background (assumes `node app.js`)
-if ($StartServer) {
-  Write-Host "Starting app with: node app.js"
-  $proc = Start-Process -FilePath node -ArgumentList 'app.js' -PassThru
-  Start-Sleep -Seconds 2
-}
-
-$env:BASE_URL = $BaseUrl
-if ($EnvStages) { $env:ENV_STAGES = $EnvStages }
-$env:ENV_P95_MS = $EnvP95Ms
-$env:ENV_ERROR_RATE = $EnvErrorRate
-
-Write-Host "Running k6 (BASE_URL=$env:BASE_URL) ..."
-npm run k6:full
-
-if ($StartServer -and $proc) {
-  Write-Host "Stopping server (PID $($proc.Id))"
-  Stop-Process -Id $proc.Id
-}
-<#
-.SYNOPSIS
-  Convenience script to set environment variables and run the full k6 flow (npm run k6:full).
-
-.DESCRIPTION
-  Sets common env vars used by the k6 scripts (BASE_URL, ENV_STAGES or STAGE_TARGETS/STAGE_DURATIONS,
-  ENV_P95_MS, ENV_ERROR_RATE). Optionally starts the API server (node app.js) in background, runs
-  `npm run k6:full` and then stops the background server.
-
-.EXAMPLE
-  # Run against local server (default)
-  .\run-k6.ps1
-
-  # Run against staging and custom stages (JSON)
-  .\run-k6.ps1 -BaseUrl 'https://api-staging.example.com' -EnvStages '[{"duration":"1m","target":5},{"duration":"5m","target":20},{"duration":"1m","target":0}]'
-
-  # Start server automatically, then run tests
-  .\run-k6.ps1 -StartServer
-
-#>
-
-param(
   [string]$BaseUrl = 'http://localhost:3000',
   [string]$EnvStages = '',
   [string]$StageTargets = '',
@@ -55,6 +7,28 @@ param(
   [double]$ErrorRate = 0.005,
   [switch]$StartServer
 )
+
+<#
+.SYNOPSIS
+  Convenience script to set environment variables and run the full k6 flow (npm run k6:full).
+
+.DESCRIPTION
+  Sets common env vars used by the k6 scripts (BASE_URL, ENV_STAGES or STAGE_TARGETS/STAGE_DURATIONS,
+  ENV_P95_MS, ENV_ERROR_RATE). Optionally starts the API server (node app.js) in background, runs
+  `npm run k6:full` and then stops the background server. The script also generates an HTML report
+  and opens it in the default browser upon successful completion.
+
+.EXAMPLE
+  # Run against local server (default) and open report
+  .\run-k6.ps1
+
+  # Run against staging and custom stages (JSON)
+  .\run-k6.ps1 -BaseUrl 'https://api-staging.example.com' -EnvStages '[{"duration":"1m","target":5},{"duration":"5m","target":20},{"duration":"1m","target":0}]'
+
+  # Start server automatically, then run tests and open report
+  .\run-k6.ps1 -StartServer
+
+#>
 
 Write-Host "Setting BASE_URL=$BaseUrl"
 $env:BASE_URL = $BaseUrl
@@ -79,7 +53,7 @@ if ($StartServer) {
   Write-Host "Starting server: node app.js (will run in background)"
   $serverProc = Start-Process -FilePath 'node' -ArgumentList 'app.js' -PassThru
   Start-Sleep -Seconds 1
-  Write-Host "Server started (PID: $($serverProc.Id)). Give it a few seconds to warm up if needed."
+  Write-Host ("Server started (PID: {0}). Give it a few seconds to warm up if needed." -f $serverProc.Id)
 }
 
 try {
@@ -90,15 +64,19 @@ try {
     Write-Host "k6 run exited with code $code" -ForegroundColor Yellow
   } else {
     Write-Host "k6 run completed successfully" -ForegroundColor Green
+    if (Test-Path -Path "test/k6/report.html") {
+        Write-Host "HTML report generated at test/k6/report.html. Opening..."
+        Invoke-Item -Path "test/k6/report.html"
+    }
   }
 } finally {
   if ($serverProc -ne $null) {
     try {
-      Write-Host "Stopping server (PID: $($serverProc.Id))"
+      Write-Host ('Stopping server (PID: ' + $serverProc.Id + ')')
       Stop-Process -Id $serverProc.Id -Force -ErrorAction Stop
       Write-Host "Server stopped"
     } catch {
-      Write-Host "Failed to stop server process: $_" -ForegroundColor Yellow
+      Write-Host ('Failed to stop server process: ' + $_.Exception.Message) -ForegroundColor Yellow
     }
   }
 }
