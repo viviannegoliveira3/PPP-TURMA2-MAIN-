@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Testes de performance k6
 
 > **Nota:** Para executar os testes e gerar o relatório, o método principal é usar o script `run-k6.ps1`. Veja a seção "Como executar" abaixo para detalhes.
@@ -42,6 +43,19 @@ Para conveniência, você pode usar o parâmetro `-StartServer` para que o scrip
 ## Detalhamento por conceito
 
 A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
+=======
+Testes de performance k6 (localizados em `test/k6`)
+
+Este README descreve onde no código cada um dos conceitos solicitados está implementado.
+
+Sumário rápido (arquivos relevantes)
+- `test/k6/api-perf-test.js` — script k6 principal (options, helpers, trends, groups, CSV, setup).
+- `test/k6/data/students.csv` — dados para data-driven testing.
+- `tools/k6-json-to-html.js` — conversor simples de JSON k6 para HTML (tenta ler o objeto agregado quando presente).
+- `tools/parse-k6-json.js` — utilitário que agrega pontos NDJSON e pode gerar um relatório HTML quando o resumo agregado não está presente.
+
+Detalhamento por conceito (trechos e linhas em `test/k6/api-perf-test.js`)
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 
 - Thresholds
 
@@ -63,6 +77,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   Exemplos (linhas 46–51 e 60–63):
 
   ```javascript
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L10-L16
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   // linhas 46-51 (registerStudent)
   registerTrend.add(res.timings.duration);
   const ok = check(res, {
@@ -75,6 +93,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   // linhas 60-63 (loginStudent checks)
   const ok = check(res, {
     'student login 200': (r) => r.status === 200,
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L46-L51
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
     'student login has token': (r) => !!(r.json && r.json().token),
   });
   ```
@@ -82,6 +104,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 - Helpers
 
   Funções reutilizáveis definidas no topo do script:
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L60-L63
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 
   ```javascript
   // linhas 5-9 (randomName)
@@ -99,6 +125,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
 - Trends
 
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L5-L9
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   Declaração de métricas custom (linhas 19–23):
 
   ```javascript
@@ -110,6 +140,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   ```
 
 - Faker (geração local de dados únicos)
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L19-L23
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 
   Para execução local o teste usa um gerador simples (evita dependência de CDN):
 
@@ -118,6 +152,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   function randomName() { /* gera nomes aleatórios para execução local */ }
   ```
 
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L4-L9
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 - Variável de Ambiente
 
   O helper `baseUrl()` e o `setup()` usam `__ENV` (linhas 35–38 e 98–100):
@@ -128,11 +166,19 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
     return __ENV.BASE_URL || 'http://localhost:3000';
   }
 
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L35-L38
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   // linhas 98-100 (setup usa __ENV para instruidor)
   const instrEmail = __ENV.INSTRUCTOR_EMAIL || `instr+${Math.floor(Math.random() * 10000)}@example.com`;
   const instrPwd = __ENV.INSTRUCTOR_PASSWORD || 'instructorpass';
   ```
 
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L98-L100
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 - Stages
 
   O arquivo traz um preset local (`vus`/`duration`) nas linhas 11–13; para execuções reais em CI prefira usar `options.stages` ou passar `ENV_STAGES` via `run-k6.ps1`.
@@ -141,6 +187,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   // linhas 11-13 (preset local)
   export const options = { vus: 2, duration: '15s' };
   ```
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L11-L13
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
 
 - Reaproveitamento de Resposta
 
@@ -152,6 +202,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   const token = (loginRes && loginRes.json) ? loginRes.json().token : null;
   // ... cria lesson ...
   return { base, instructorToken: token, lessonId };
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L101-L113
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   ```
 
 - Uso de Token de Autenticação
@@ -160,10 +214,18 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
   ```javascript
   // linha 85 (addProgress headers)
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L85-L85
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   const params = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${instructorToken}` } };
 
   // linha 143 (GET /students com Authorization)
   http.get(`${baseUrl()}/students`, { headers: { Authorization: `Bearer ${instructorToken}` } });
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L143-L143
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   ```
 
 - Data-Driven Testing
@@ -174,6 +236,10 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   // linhas 25-33
   const csv = open('./data/students.csv');
   const lines = csv.split('\n').filter(l => l.trim() !== '');
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L25-L33
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   function parseRow(i) { const cols = lines[i % lines.length].split(','); return { name: cols[0], email: cols[1], password: cols[2] }; }
   ```
 
@@ -183,10 +249,15 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
   ```javascript
   // linhas 119 e 138
+<<<<<<< HEAD
+=======
+Source: https://github.com/juliodelimas/ppp-turma2/blob/main/test/k6/api-perf-test.js#L119-L138
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
   group('student lifecycle', function () { /* ... */ });
   group('instructor actions', function () { /* ... */ });
   ```
 
+<<<<<<< HEAD
 ---
 
 ## Outras Formas de Execução
@@ -228,3 +299,31 @@ $env:K6_WEB_DASHBOARD = "true"
 $env:K6_WEB_DASHBOARD_EXPORT = "dashboard.html"
 k6 run test/k6/api-perf-test.js
 ```
+=======
+Como executar
+
+1. Inicie a API em outra janela:
+
+```powershell
+node app.js
+```
+
+2. Execute o teste k6 (exemplo local):
+
+```powershell
+k6 run --out json=out.json test/k6/api-perf-test.js --env BASE_URL=http://localhost:3000
+```
+
+3. Gere o relatório HTML:
+
+```powershell
+node tools/parse-k6-json.js out.json test/k6/report.html
+# ou (se o k6 já gerou o agregado):
+node tools/k6-json-to-html.js out.json test/k6/report.html
+```
+
+Observações
+
+- O `tools/k6-json-to-html.js` tenta ler o bloco agregado do JSON gerado pelo k6; quando esse bloco não está presente (você apenas tem pontos NDJSON) o `tools/parse-k6-json.js` pode agregar e gerar um HTML simples.
+- Para relatórios mais completos/visuais, recomendo exportar o k6 para Influx/Grafana ou usar um repositório de métricas dedicado.
+>>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
