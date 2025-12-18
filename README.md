@@ -165,7 +165,7 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
   // linha 143 (GET /students com Authorization)
   http.get(`${baseUrl()}/students`, { headers: { Authorization: `Bearer ${instructorToken}` } });
   ```
-
+ap
 - Data-Driven Testing
 
   Leitura do CSV e função `parseRow` (linhas 25–33):
@@ -255,4 +255,4 @@ Observações
 
 - O `tools/k6-json-to-html.js` tenta ler o bloco agregado do JSON gerado pelo k6; quando esse bloco não está presente (você apenas tem pontos NDJSON) o `tools/parse-k6-json.js` pode agregar e gerar um HTML simples.
 - Para relatórios mais completos/visuais, recomendo exportar o k6 para Influx/Grafana ou usar um repositório de métricas dedicado.
->>>>>>> e7069889093e77b053a314cfc55374ee37dc23e7
+
