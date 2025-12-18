@@ -2,7 +2,8 @@
 
 > **Nota:** Para executar os testes e gerar o relatório, o método principal é usar o script `run-k6.ps1`. Veja a seção "Como executar" abaixo para detalhes.
 
-Este README descreve onde no código cada um dos conceitos solicitados está implementado.
+Este README descreve onde no código cada um dos conceitos que foram implementados.
+
 
 ## Sumário rápido (arquivos relevantes)
 - `run-k6.ps1` - **Principal script para execução dos testes.** Automatiza a execução, geração de relatório e visualização.
@@ -99,7 +100,7 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
 - Trends
 
-  Declaração de métricas custom (linhas 19–23):
+  Declaração de métricas custom 
 
   ```javascript
   // linhas 19-23
@@ -111,7 +112,7 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
 - Faker (geração local de dados únicos)
 
-  Para execução local o teste usa um gerador simples (evita dependência de CDN):
+  Para execução local o teste usa um gerador simples
 
   ```javascript
   // linhas 4-9 (gerador local)
@@ -120,7 +121,7 @@ A seguir, detalhes da implementação no arquivo `test/k6/api-perf-test.js`.
 
 - Variável de Ambiente
 
-  O helper `baseUrl()` e o `setup()` usam `__ENV` (linhas 35–38 e 98–100):
+  O helper `baseUrl()` e o `setup()` usam `__ENV` 
 
   ```javascript
   // linhas 35-38
@@ -179,7 +180,7 @@ ap
 
 - Groups
 
-  O script usa `group()` para organizar o fluxo (linhas ~119 e ~138):
+  O script usa `group()` para organizar o fluxo 
 
   ```javascript
   // linhas 119 e 138
