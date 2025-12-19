@@ -1,8 +1,8 @@
-# Testes de performance k6
+# Testes de performance automatizado k6
 
-> **Nota:** Para executar os testes e gerar o relatório, o método principal é usar o script `run-k6.ps1`. Veja a seção "Como executar" abaixo para detalhes.
+> Para executar os testes e gerar o relatório, o método principal é usar o script `run-k6.ps1`. Veja a seção "Como executar" abaixo para detalhes.
 
-Este README descreve onde no código cada um dos conceitos que foram implementados.
+O código descreve cada um dos conceitos que foram implementados.
 
 
 ## Sumário rápido (arquivos relevantes)
