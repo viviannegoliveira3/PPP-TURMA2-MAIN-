@@ -1,12 +1,7 @@
 name: K6 Performance Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   k6_test:
