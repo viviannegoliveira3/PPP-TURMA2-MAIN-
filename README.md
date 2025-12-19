@@ -224,9 +224,8 @@ Para cenários mais avançados, como ativar o dashboard web do k6, você pode in
 
 ```powershell
 # Exemplo: rodando o teste com o dashboard web ativado
-$env:K6_WEB_DASHBOARD = "true"
-$env:K6_WEB_DASHBOARD_EXPORT = "dashboard.html"
-k6 run test/k6/api-perf-test.js
+
+$env:K6_WEB_DASHBOARD="true"; $env:K6_WEB_DASHBOARD_EXPORT="test/k6/reports/html-report.html"; $env:K6_WEB_DASHBOARD_PERIOD="2s"; $env:K6_WEB_DASHBOARD_OPEN="true"; k6 run -e BASE_URL=http://localhost:3000 test/k6/advanced-perf-test.js
 ```
 =======
 Como executar
