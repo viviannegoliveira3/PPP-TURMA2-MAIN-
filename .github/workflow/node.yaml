@@ -1,4 +1,7 @@
-name: Node.js CI
+name: Node.js 
+
+on:
+  workflow_dispatch:
 
 on:
   push:
