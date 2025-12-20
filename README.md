@@ -250,8 +250,5 @@ node tools/parse-k6-json.js out.json test/k6/report.html
 node tools/k6-json-to-html.js out.json test/k6/report.html
 ```
 
-Observações
 
-- O `tools/k6-json-to-html.js` tenta ler o bloco agregado do JSON gerado pelo k6; quando esse bloco não está presente (você apenas tem pontos NDJSON) o `tools/parse-k6-json.js` pode agregar e gerar um HTML simples.
-- Para relatórios mais completos/visuais, recomendo exportar o k6 para Influx/Grafana ou usar um repositório de métricas dedicado.
 
